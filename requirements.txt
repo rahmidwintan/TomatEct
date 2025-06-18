@@ -2,5 +2,5 @@ streamlit
 ultralytics
 Pillow
 gdown
-numpy
 opencv-python
+numpy
