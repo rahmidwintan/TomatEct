@@ -61,7 +61,7 @@ def signup_page():
 # 4.  HALAMAN LOGIN
 # ────────────────────────────────────────────────────────────────
 def login_page():
-    st.title("Login ke Aplikasi Tomatect")
+    st.title("Login ke Tomatect")
     username = st.text_input("Username")
     password = st.text_input("Password", type="password")
 
@@ -72,7 +72,7 @@ def login_page():
         else:
             st.error("❌ Username atau password salah.")
 
-    st.button("📝 Belum punya akun? Daftar",
+    st.button("Belum punya akun? Daftar",
               on_click=lambda: st.session_state.update(page="signup"))
 
 # ────────────────────────────────────────────────────────────────
