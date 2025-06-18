@@ -1,3 +1,6 @@
-ultralytics
 streamlit
+ultralytics
 Pillow
+gdown
+numpy
+opencv-python
