@@ -6,7 +6,7 @@ import tempfile, gdown, os, json, io
 # ────────────────────────────────────────────────────────────────
 # 1.  KONFIGURASI HALAMAN
 # ────────────────────────────────────────────────────────────────
-st.set_page_config(page_title="Deteksi Kualitas Tomat", layout="centered")
+st.set_page_config(page_title="🍅 TomaTect: Deteksi Kualitas Buah Tomat (Grade A, B, C)", layout="centered")
 
 # ────────────────────────────────────────────────────────────────
 # 2.  MANAJEMEN USER (LOGIN & SIGNUP)
@@ -48,10 +48,14 @@ def signup_page():
         else:
             users[new_user] = new_pass
             save_users(users)
-            st.success("✅ Berhasil daftar! Anda sudah login.")
-            st.session_state.update(logged_in=True, username=new_user, page="main")
+            st.success("✅ Berhasil daftar! Silakan login dengan akun baru.")
+            st.session_state["username"] = ""
+            st.session_state["password"] = ""
+            st.session_state.update(page="login")
+            st.experimental_rerun()
 
-    st.button("🔙 Kembali ke Login", on_click=lambda: st.session_state.update(page="login"))
+
+    st.button("Kembali ke Login", on_click=lambda: st.session_state.update(page="login"))
 
 # ────────────────────────────────────────────────────────────────
 # 4.  HALAMAN LOGIN
@@ -68,7 +72,7 @@ def login_page():
         else:
             st.error("❌ Username atau password salah.")
 
-    st.button("Belum punya akun? Daftar",
+    st.button("📝 Belum punya akun? Daftar",
               on_click=lambda: st.session_state.update(page="signup"))
 
 # ────────────────────────────────────────────────────────────────
@@ -140,7 +144,7 @@ def main_page():
         # 5) Tombol download hasil
         buf = io.BytesIO()
         annotated_pil.save(buf, format="JPEG")
-        st.download_button("💾 Download Hasil Deteksi",
+        st.download_button("Download Hasil Deteksi",
                            data=buf.getvalue(),
                            file_name="hasil_deteksi.jpg",
                            mime="image/jpeg")
