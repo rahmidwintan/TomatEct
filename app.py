@@ -75,7 +75,7 @@ def login_page():
 # 5.  HALAMAN UTAMA (DETEKSI TOMAT)
 # ────────────────────────────────────────────────────────────────
 def main_page():
-    st.title("🍅 Deteksi Kualitas Buah Tomat (Grade A, B, C)")
+    st.title("🍅 TomaTect: Deteksi Kualitas Buah Tomat (Grade A, B, C)")
     st.caption(f"Halo **{st.session_state.username}**, upload gambar tomat untuk dideteksi.")
 
     # === SETUP MODEL (download sekali lalu cache di session) ===========
@@ -131,7 +131,7 @@ def main_page():
         class_idxs  = r.boxes.cls.tolist() if r.boxes else []
         class_names = [NAMES[int(i)] for i in class_idxs]
 
-        st.markdown("### 📊 Ringkasan Deteksi")
+        st.markdown("### Ringkasan Deteksi")
         col1, col2, col3 = st.columns(3)
         col1.metric("Grade A", class_names.count("A"))
         col2.metric("Grade B", class_names.count("B"))
@@ -148,7 +148,7 @@ def main_page():
         os.remove(temp_path)
 
     st.markdown("---")
-    if st.button("🚪 Logout"):
+    if st.button("Logout"):
         st.session_state.update(logged_in=False, page="login", username="")
         st.experimental_rerun()
 
