@@ -118,7 +118,6 @@ def about_page():
     col1, col2, col3 = st.columns(3)
 
     with col1:
-        st.image("https://github.com/rahmidwintan/TomatEct/blob/17bb3116cb0f03083a5c0a3e9a54a73c9592df82/Matang.png", caption="Matang", use_container_width=True)
         st.markdown("""
         **Matang (Grade A)**  
         - Warna merah merata  
@@ -127,7 +126,6 @@ def about_page():
         """)
 
     with col2:
-        st.image("https://github.com/rahmidwintan/TomatEct/blob/17bb3116cb0f03083a5c0a3e9a54a73c9592df82/Setengah%20Matang.png", caption="Setengah Matang", use_container_width=True)
         st.markdown("""
         **Setengah Matang (Grade B)**  
         - Warna merah-kuning  
@@ -136,7 +134,6 @@ def about_page():
         """)
 
     with col3:
-        st.image("https://github.com/rahmidwintan/TomatEct/blob/17bb3116cb0f03083a5c0a3e9a54a73c9592df82/Mentah.png", caption="Mentah", use_container_width=True)
         st.markdown("""
         **Mentah (Grade C)**  
         - Warna hijau mendominasi  
