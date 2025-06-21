@@ -110,25 +110,47 @@ def login():
     st.button("Belum punya akun? Daftar", on_click=lambda: st.session_state.update(page="signup"))
 
 def about_page():
-    st.title("ℹ️ Tentang TomaTect")
+    st.title("Tingkat Kematangan Tomat")
     st.write("""
-    **TomaTect** adalah aplikasi web interaktif yang dirancang untuk mendeteksi dan mengklasifikasikan kualitas buah tomat secara otomatis ke dalam tiga kategori: Grade A, B, dan C berdasarkan citra visual. Aplikasi ini memanfaatkan model YOLO (You Only Look Once) yang telah dilatih untuk mendeteksi morfologi dan fitur fisik tomat, seperti bentuk, ukuran, dan warna permukaan.
-
-Aplikasi dibangun menggunakan framework Streamlit, sehingga pengguna hanya perlu mengunggah gambar tomat, dan hasil deteksi akan ditampilkan secara langsung dalam bentuk:
-             
-    • Bounding box pada setiap tomat yang terdeteksi,
-             
-    • Ringkasan jumlah masing-masing grade,
-             
-    • Fitur unduhan gambar hasil deteksi,
-             
-    • Laporan deteksi otomatis dalam format PDF.
-             
-TomaTect juga menyediakan fitur multi-user login, serta tampilan UI yang menyesuaikan mode terang/gelap berdasarkan pengaturan perangkat pengguna, menjadikannya modern, ringan, dan ramah pengguna.
+    Kematangan tomat merupakan indikator penting dalam penentuan kualitas, rasa, serta waktu panen dan distribusi. Berikut adalah tiga kategori utama tingkat kematangan tomat yang digunakan dalam aplikasi TomaTect:
     """)
 
+    col1, col2, col3 = st.columns(3)
+
+    with col1:
+        st.image("C:\Rahmi\kuliah\SEMESTER 6\PI Rahmi\DATASET\d5300022417f98c2766d3b6b1282.png", caption="Matang", use_container_width=True)
+        st.markdown("""
+        **Matang (Grade A)**  
+        - Warna merah merata  
+        - Tekstur lembut  
+        - Siap dikonsumsi langsung
+        """)
+
+    with col2:
+        st.image("C:\Rahmi\kuliah\SEMESTER 6\PI Rahmi\DATASET\879d5fea6405226d84f43f2bfa8d1f4b.png", caption="Setengah Matang", use_container_width=True)
+        st.markdown("""
+        **Setengah Matang (Grade B)**  
+        - Warna merah-kuning  
+        - Masih keras sebagian  
+        - Cocok untuk penyimpanan atau distribusi
+        """)
+
+    with col3:
+        st.image("C:\Rahmi\kuliah\SEMESTER 6\PI Rahmi\DATASET\9c3bc2101bacfee1f48aaa76fcd7bc4b.png", caption="Mentah", use_container_width=True)
+        st.markdown("""
+        **Mentah (Grade C)**  
+        - Warna hijau mendominasi  
+        - Tekstur keras  
+        - Belum siap konsumsi, cocok untuk pematangan lanjutan
+        """)
+
+    st.write("---")
+    st.info("Klasifikasi ini digunakan sebagai dasar untuk deteksi otomatis kualitas tomat dalam aplikasi TomaTect.")
+
+
+
 def detect_page():
-    st.title("🍅 TomaTect: Deteksi Kualitas Tomat")
+    st.title("TomaTect: Deteksi Tingkat Kematangan Tomat")
     st.caption("Deteksi Tomat Sekarang!")
 
     MODEL_URL  = "https://drive.google.com/file/d/1ZE6fp6XCdQt1EHQLCfZkcVYKNr9-2RdD/view?usp=sharing"
@@ -157,13 +179,13 @@ def detect_page():
     pdf.set_auto_page_break(auto=True, margin=15)
 
     for idx, uploaded in enumerate(uploaded_files, 1):
-        st.markdown(f"### 📷 {uploaded.name}")
+        st.markdown(f"###  {uploaded.name}")
 
         try:
             img = Image.open(uploaded).convert("RGB")
         except UnidentifiedImageError:
             st.error("Format tidak didukung.");  continue
-        st.image(img, caption="Gambar Asli", use_container_width=True)
+        st.image(img, caption="Gambar Asli", width=800)
 
         # simpan sementara > inferensi
         with tempfile.NamedTemporaryFile(delete=False, suffix=".jpg") as tf:
@@ -188,7 +210,7 @@ def detect_page():
 
                # ── tambahkan ke PDF (tulisan di atas gambar) ──
         pdf.add_page()
-        pdf.set_font("Arial", size=10)
+        pdf.set_font("Times", size=10)
 
         # tulis info deteksi di bagian atas
         pdf.set_xy(10, 10)
@@ -213,7 +235,7 @@ def detect_page():
 
     # tombol download PDF gabungan
     pdf_bytes = pdf.output(dest="S").encode("latin1")
-    st.download_button("📄 Download Laporan (PDF)",
+    st.download_button("Download Laporan (PDF)",
                        pdf_bytes, "laporan_tomatect_semua.pdf", "application/pdf")
 
 
@@ -221,11 +243,11 @@ def detect_page():
 def main_app():
     with st.sidebar:
         st.markdown(f"👤 **{st.session_state.username}**")
-        st.session_state.sub_page = st.radio("Navigasi", ["Deteksi", "Tentang"])
+        st.session_state.sub_page = st.radio("Menu", ["Deteksi", "Tentang Tomat"])
         if st.button("Logout"):
             st.session_state.update(logged_in=False, page="login", username="")
             force_rerun()
-    if st.session_state.sub_page == "Tentang":
+    if st.session_state.sub_page == "Tentang Tomat":
         about_page()
     else:
         detect_page()
