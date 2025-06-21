@@ -52,7 +52,7 @@ def signup_page():
             st.session_state["username"] = ""
             st.session_state["password"] = ""
             st.session_state.update(page="login")
-            st.experimental_rerun()
+            st.rerun()
 
 
     st.button("Kembali ke Login", on_click=lambda: st.session_state.update(page="login"))
