@@ -118,7 +118,7 @@ def about_page():
     col1, col2, col3 = st.columns(3)
 
     with col1:
-        st.image("https://drive.google.com/uc?export=view&id=1zho1OX-XdeZVSNWGEQzPkiYmaM61j3Xw", caption="Matang", use_container_width=True)
+        st.image("Matang.png", caption="Matang", use_container_width=True)
         st.markdown("""
         **Matang (Grade A)**  
         - Warna merah merata  
@@ -127,7 +127,7 @@ def about_page():
         """)
 
     with col2:
-        st.image("https://drive.google.com/uc?export=view&id=1A5OzVn_g6jfEvI5dfEb1ARh9PZRxpC8Q", caption="Setengah Matang", use_container_width=True)
+        st.image("Setengah Matang.png", caption="Setengah Matang", use_container_width=True)
         st.markdown("""
         **Setengah Matang (Grade B)**  
         - Warna merah-kuning  
@@ -136,7 +136,7 @@ def about_page():
         """)
 
     with col3:
-        st.image("https://drive.google.com/uc?export=view&id=1xqRA3cOA_53E1voaxQ_rnT8RGI3HE4Hu", caption="Mentah", use_container_width=True)
+        st.image("Mentah.png", caption="Mentah", use_container_width=True)
         st.markdown("""
         **Mentah (Grade C)**  
         - Warna hijau mendominasi  
