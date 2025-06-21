@@ -4,3 +4,4 @@ Pillow
 gdown
 numpy
 opencv-python-headless
+fpdf
