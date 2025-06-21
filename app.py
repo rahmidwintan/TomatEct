@@ -244,6 +244,7 @@ def detect_page():
 
 def main_app():
     with st.sidebar:
+        st.markdown(f"My Profile")
         st.markdown(f"👤 **{st.session_state.username}**")
         st.session_state.sub_page = st.radio("Menu", ["Deteksi", "Tentang Tomat"])
         if st.button("Logout"):
