@@ -5,3 +5,5 @@ gdown
 numpy
 opencv-python-headless
 fpdf
+pandas 
+matplotlib 
