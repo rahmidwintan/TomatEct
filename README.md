@@ -1,13 +1,13 @@
 # TomatEct 🍅 
 
-Aplikasi berbasis web untuk mendeteksi **kualitas buah tomat** (Grade A, B, C) menggunakan model **YOLOv12** dan dibangun dengan framework **Streamlit**.  
+Aplikasi berbasis web untuk mendeteksi **kematangan buah tomat** (Grade A, B, C) menggunakan model **YOLOv12** dan dibangun dengan framework **Streamlit**.  
 Model ini dilatih melalui dataset morfologi fisik buah tomat dan di-deploy agar dapat digunakan dengan mudah oleh pengguna.
 
 ---
 
 ## 🚀 Demo Online
 Klik link berikut untuk mencoba aplikasinya secara langsung:  
-[🌐 Coba Aplikasinya di Streamlit Cloud](link web)
+https://tomatect-51422352pi.streamlit.app/
 
 ---
 
@@ -15,7 +15,7 @@ Klik link berikut untuk mencoba aplikasinya secara langsung:
 
 - 🔍 Deteksi kualitas tomat (Grade A, B, atau C)
 - 🖼️ Upload gambar tomat dari file
-- 🤖 Menggunakan model YOLOv8 hasil fine-tuning
+- 🤖 Menggunakan model YOLOv12 hasil fine-tuning
 - 📊 Hasil ditampilkan langsung dengan anotasi visual
 
 ---
@@ -44,7 +44,7 @@ Klik link berikut untuk mencoba aplikasinya secara langsung:
 
 1. Clone repo ini:
    ```bash
-   git clone https://github.com/USERNAME/NAMA-REPO.git
+   git clone https://github.com/rahmidwintan/TomatEct.git
    cd NAMA-REPO
 
 2. Install Dependensi
