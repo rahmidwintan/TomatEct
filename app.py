@@ -58,7 +58,7 @@ def force_rerun():
     else:
         st.experimental_rerun()
 
-st.set_page_config(page_title="🍅 TomaTect: Deteksi Kualitas Tomat", layout="centered")
+st.set_page_config(page_title="TomaTect: Deteksi Kualitas Tomat", layout="centered")
 
 # ………………………………………………………………………………………………………… 
 # ↓↓↓ SELURUH BAGIAN LOGIN / SIGNUP / DETEKSI / PDF
@@ -243,6 +243,7 @@ def detect_page():
 
 def main_app():
     with st.sidebar:
+        st.markdown(f"Username")
         st.markdown(f"👤 **{st.session_state.username}**")
         st.session_state.sub_page = st.radio("Menu", ["Deteksi", "Tentang Tomat"])
         if st.button("Logout"):
