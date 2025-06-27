@@ -132,7 +132,8 @@ def about_page():
     with col1:
         st.image("https://raw.githubusercontent.com/rahmidwintan/TomatEct/main/images/matang.png", caption="Matang", use_container_width=True)
         st.markdown("""
-        **Matang (Grade A)** - Warna merah merata  
+        **Matang (Grade A)** 
+        - Warna merah merata  
         - Tekstur lembut  
         - Siap dikonsumsi langsung
         """)
@@ -140,7 +141,8 @@ def about_page():
     with col2:
         st.image("https://raw.githubusercontent.com/rahmidwintan/TomatEct/main/images/setengah_matang.png", caption="Setengah Matang", use_container_width=True)
         st.markdown("""
-        **Setengah Matang (Grade B)** - Warna merah-kuning  
+        **Setengah Matang (Grade B)** 
+        - Warna merah-kuning  
         - Masih keras sebagian  
         - Cocok untuk penyimpanan atau distribusi
         """)
@@ -148,7 +150,8 @@ def about_page():
     with col3:
         st.image("https://raw.githubusercontent.com/rahmidwintan/TomatEct/main/images/mentah.png", caption="Mentah", use_container_width=True)
         st.markdown("""
-        **Mentah (Grade C)** - Warna hijau mendominasi  
+        **Mentah (Grade C)** 
+        - Warna hijau mendominasi  
         - Tekstur keras  
         - Belum siap konsumsi, cocok untuk pematangan lanjutan
         """)
@@ -182,7 +185,7 @@ def detect_page():
 
     # --- Bagian Kamera Belakang ---
     st.markdown("---")
-    st.header("📸 Ambil Gambar dari Kamera Belakang")
+    st.header("Ambil gambar")
     st.info("Pastikan Anda memberikan izin akses kamera pada browser Anda.")
 
     webrtc_ctx = webrtc_streamer(
@@ -195,14 +198,14 @@ def detect_page():
     captured_image_placeholder = st.empty()
 
     if webrtc_ctx.video_receiver:
-        if st.button("Ambil Foto dari Kamera"):
+        if st.button("Ambil foto"):
             try:
                 frame = webrtc_ctx.video_receiver.get_frame(timeout=1.0)
                 if frame:
                     img_array = frame.to_ndarray(format="bgr24")
                     img_pil = Image.fromarray(img_array[:, :, ::-1])
 
-                    captured_image_placeholder.image(img_pil, caption="Gambar yang Diambil dari Kamera", width=600)
+                    captured_image_placeholder.image(img_pil, caption="Gambar yang diambil", width=600)
 
                     with tempfile.NamedTemporaryFile(delete=False, suffix=".jpg") as tf:
                         img_pil.save(tf.name)
@@ -252,7 +255,7 @@ def detect_page():
     st.markdown("---") # Pemisah antara bagian kamera dan upload
 
     # --- Bagian Pemrosesan Uploaded Files ---
-    st.header("⬆️ Upload Gambar dari Perangkat")
+    st.header("Upload Gambar dari Perangkat")
     uploaded_files = st.file_uploader(
         "Upload Gambar", type=["jpg", "jpeg", "png", "heic"],
         accept_multiple_files=True
