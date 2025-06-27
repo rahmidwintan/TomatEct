@@ -83,7 +83,7 @@ def signup():
     st.button("Kembali ke Login", on_click=lambda: st.session_state.update(page="login"))
 
 def login():
-    st.title("Login TomaTect")
+    st.title("Login ke TomaTect")
     u = st.text_input("Username", key="username_input")
     p = st.text_input("Password", type="password", key="password_input")
     if st.button("Login", key="login_button"):
