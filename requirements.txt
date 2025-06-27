@@ -1,9 +1,10 @@
 streamlit
-ultralytics
 Pillow
-gdown
-numpy
-opencv-python-headless
+ultralytics
 fpdf
-pandas 
-matplotlib 
+gdown
+psycopg2-binary
+bcrypt
+numpy
+av
+streamlit-webrtc
