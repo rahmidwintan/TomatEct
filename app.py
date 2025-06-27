@@ -63,8 +63,6 @@ def force_rerun():
 
 st.set_page_config(page_title="TomaTect: Deteksi Kualitas Tomat", layout="centered")
 
----
-
 ## Manajemen Pengguna (File JSON)
 
 ```python
