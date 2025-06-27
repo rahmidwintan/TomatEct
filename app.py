@@ -183,9 +183,6 @@ def detect_page():
 
             try:
                 img = Image.open(uploaded).convert("RGB")
-                # =========================================================================
-                # Tambahkan logika perbaikan orientasi EXIF di sini
-                # =========================================================================
                 try:
                     for orientation in ExifTags.TAGS.keys():
                         if ExifTags.TAGS[orientation] == 'Orientation':
@@ -195,11 +192,11 @@ def detect_page():
                     if exif[orientation] == 3:
                         img = img.rotate(180, expand=True)
                     elif exif[orientation] == 6:
-                        img = img.rotate(270, expand=True) # Rotate 90 degrees counter-clockwise to correct 270 clockwise
+                        img = img.rotate(270, expand=True) 
                     elif exif[orientation] == 8:
-                        img = img.rotate(90, expand=True) # Rotate 270 degrees counter-clockwise to correct 90 clockwise
+                        img = img.rotate(90, expand=True) 
                 except (AttributeError, KeyError, IndexError):
-                    # Tidak ada data EXIF orientasi atau error lainnya
+                    img_pil = img_pil.rotate(-90, expand=True)
                     pass
                 # =========================================================================
 
@@ -208,7 +205,7 @@ def detect_page():
             except Exception as e:
                 st.error(f"Terjadi kesalahan saat memproses gambar: {e}"); continue # Tangani error lain
 
-            st.image(img, caption="Gambar Asli (Setelah Koreksi Orientasi)", width=800)
+            st.image(img, caption="Gambar Asli", width=800)
 
             with tempfile.NamedTemporaryFile(delete=False, suffix=".jpg") as tf:
                 img.save(tf.name)
