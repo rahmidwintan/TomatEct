@@ -182,19 +182,24 @@ def detect_page():
             st.markdown(f"###  {uploaded.name}")
 
             try:
-                exif = img_pil._getexif()
-                        if exif:
-                            for tag, value in exif.items():
-                                if ExifTags.TAGS.get(tag) == 'Orientation':
-                                    if value == 3: # Rotated 180
-                                        img_pil = img_pil.rotate(180, expand=True)
-                                    elif value == 6: # Rotated 90 CW
-                                        img_pil = img_pil.rotate(270, expand=True) # Rotate 270 CCW to correct
-                                    elif value == 8: # Rotated 270 CW
-                                        img_pil = img_pil.rotate(90, expand=True) # Rotate 90 CCW to correct
-                                    break
-                    except (AttributeError, KeyError, IndexError):
-                    img_pil = img_pil.rotate(-90, expand=True)
+                img = Image.open(uploaded).convert("RGB")
+                # =========================================================================
+                # Tambahkan logika perbaikan orientasi EXIF di sini
+                # =========================================================================
+                try:
+                    for orientation in ExifTags.TAGS.keys():
+                        if ExifTags.TAGS[orientation] == 'Orientation':
+                            break
+                    exif = dict(img._getexif().items())
+
+                    if exif[orientation] == 3:
+                        img = img.rotate(180, expand=True)
+                    elif exif[orientation] == 6:
+                        img = img.rotate(270, expand=True) # Rotate 90 degrees counter-clockwise to correct 270 clockwise
+                    elif exif[orientation] == 8:
+                        img = img.rotate(90, expand=True) # Rotate 270 degrees counter-clockwise to correct 90 clockwise
+                except (AttributeError, KeyError, IndexError):
+                    # Tidak ada data EXIF orientasi atau error lainnya
                     pass
                 # =========================================================================
 
@@ -203,7 +208,7 @@ def detect_page():
             except Exception as e:
                 st.error(f"Terjadi kesalahan saat memproses gambar: {e}"); continue # Tangani error lain
 
-            st.image(img, caption="Gambar Asli", width=800)
+            st.image(img, caption="Gambar Asli (Setelah Koreksi Orientasi)", width=800)
 
             with tempfile.NamedTemporaryFile(delete=False, suffix=".jpg") as tf:
                 img.save(tf.name)
