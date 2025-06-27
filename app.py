@@ -5,9 +5,7 @@ from fpdf import FPDF
 import tempfile, gdown, os, json, io, datetime
 from PIL import Image, UnidentifiedImageError, ExifTags 
 
-# ╭───────────────────  AUTO-THEME  ───────────────────╮
-#   Light ⬅︎ default | otomatis gelap jika device dark
-# ╰─────────────────────────────────────────────────────╯
+
 st.markdown(
     """
     <style id="auto-theme">
@@ -47,11 +45,6 @@ st.markdown(
     unsafe_allow_html=True,
 )
 
-# ───────────────────────────────────────────────
-#  SELANJUTNYA TETAPI KODE LAMA TANPA BAGIAN THEME
-# ───────────────────────────────────────────────
-# (hapus: cur_theme/mode/force_rerun/apply_theme)
-
 def force_rerun():
     if hasattr(st, "rerun"):
         st.rerun()
@@ -59,13 +52,6 @@ def force_rerun():
         st.experimental_rerun()
 
 st.set_page_config(page_title="TomaTect: Deteksi Kualitas Tomat", layout="centered")
-
-# ………………………………………………………………………………………………………… 
-# ↓↓↓ SELURUH BAGIAN LOGIN / SIGNUP / DETEKSI / PDF
-#     TETAP SAMA DENGAN KODE TERAKHIR ANDA ↓↓↓
-# …………………………………………………………………………………………………………
-
-
 
 
 USER_FILE = "users.json"
@@ -183,9 +169,6 @@ def detect_page():
 
             try:
                 img = Image.open(uploaded).convert("RGB")
-                # =========================================================================
-                # Tambahkan logika perbaikan orientasi EXIF di sini
-                # =========================================================================
                 try:
                     for orientation in ExifTags.TAGS.keys():
                         if ExifTags.TAGS[orientation] == 'Orientation':
@@ -193,20 +176,18 @@ def detect_page():
                     exif = dict(img._getexif().items())
 
                     if exif[orientation] == 3:
-                        img = img.rotate(180, expand=True)
+                        img = img.rotate(-180, expand=True)
                     elif exif[orientation] == 6:
                         img = img.rotate(270, expand=True) 
                     elif exif[orientation] == 8:
-                        img = img.rotate(-90, expand=True) 
+                        img = img.rotate(90, expand=True) 
                 except (AttributeError, KeyError, IndexError):
-                    # Tidak ada data EXIF orientasi atau error lainnya
                     pass
-                # =========================================================================
 
             except UnidentifiedImageError:
                 st.error("Format tidak didukung.");  continue
             except Exception as e:
-                st.error(f"Terjadi kesalahan saat memproses gambar: {e}"); continue # Tangani error lain
+                st.error(f"Terjadi kesalahan saat memproses gambar: {e}"); continue 
 
             st.image(img, caption="Gambar Asli (Setelah Koreksi Orientasi)", width=800)
 
