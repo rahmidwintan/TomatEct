@@ -119,11 +119,8 @@ def login():
             st.error("Username / Password salah.")
     st.button("Belum punya akun? Daftar", key="signup_button", on_click=lambda: st.session_state.update(page="signup"))
 
----
 
 ## Halaman Utama Aplikasi
-
-```python
 def about_page():
     st.title("Tingkat Kematangan Tomat")
     st.write("""
