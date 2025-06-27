@@ -175,6 +175,13 @@ def detect_page():
                             break
                     exif = dict(img._getexif().items())
 
+                if exif[orientation] == 3:
+                        img = img.rotate(180, expand=True)
+                    elif exif[orientation] == 6:
+                        img = img.rotate(270, expand=True) 
+                    elif exif[orientation] == 8:
+                        img = img.rotate(90, expand=True) 
+
                     
                     
                 except (AttributeError, KeyError, IndexError):
@@ -185,7 +192,7 @@ def detect_page():
             except Exception as e:
                 st.error(f"Terjadi kesalahan saat memproses gambar: {e}"); continue 
 
-            st.image(img, caption="Gambar Asli (Setelah Koreksi Orientasi)", width=800)
+            st.image(img, caption="Gambar Asli", width=400)
 
             with tempfile.NamedTemporaryFile(delete=False, suffix=".jpg") as tf:
                 img.save(tf.name)
