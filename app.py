@@ -190,7 +190,7 @@ def detect_page():
             except Exception as e:
                 st.error(f"Terjadi kesalahan saat memproses gambar: {e}"); continue 
 
-            st.image(img, caption="Gambar Asli", width=800)
+            st.image(img, caption="Gambar Asli", width=700)
 
             with tempfile.NamedTemporaryFile(delete=False, suffix=".jpg") as tf:
                 img.save(tf.name)
