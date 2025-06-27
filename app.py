@@ -65,7 +65,7 @@ st.set_page_config(page_title="TomaTect: Deteksi Kualitas Tomat", layout="center
 
 ## Manajemen Pengguna (File JSON)
 
-```python
+
 USER_FILE = "users.json"
 
 def load_users():
