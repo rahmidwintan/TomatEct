@@ -178,9 +178,8 @@ def detect_page():
                     if exif[orientation] == 3:
                         img = img.rotate(180, expand=True)
                     elif exif[orientation] == 6:
-                        img = img.rotate(-270, expand=True) 
-                    elif exif[orientation] == 8:
-                        img = img.rotate(90, expand=True) 
+                        img = img.rotate(270, expand=True) 
+                    
                 except (AttributeError, KeyError, IndexError):
                     pass
 
