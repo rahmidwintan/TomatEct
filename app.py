@@ -195,9 +195,9 @@ def detect_page():
                     if exif[orientation] == 3:
                         img = img.rotate(180, expand=True)
                     elif exif[orientation] == 6:
-                        img = img.rotate(270, expand=True) # Rotate 90 degrees counter-clockwise to correct 270 clockwise
+                        img = img.rotate(270, expand=True) 
                     elif exif[orientation] == 8:
-                        img = img.rotate(90, expand=True) # Rotate 270 degrees counter-clockwise to correct 90 clockwise
+                        img = img.rotate(90, expand=True) 
                 except (AttributeError, KeyError, IndexError):
                     # Tidak ada data EXIF orientasi atau error lainnya
                     pass
