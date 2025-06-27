@@ -193,6 +193,8 @@ def detect_page():
         mode=WebRtcMode.SENDRECV,
         video_receiver_size=400,
         media_stream_constraints={"video": True, "audio": False},
+        rtc_configuration={"iceServers": [{"urls": ["stun:stun.l.google.com:19302"]}]}
+    )
     )
 
     captured_image_placeholder = st.empty()
