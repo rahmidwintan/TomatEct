@@ -170,20 +170,18 @@ def detect_page():
             try:
                 img = Image.open(uploaded).convert("RGB")
                 try:
-                    for orientation in ExifTags.TAGS.keys():
-                        if ExifTags.TAGS[orientation] == 'Orientation':
-                            break
-                    exif = dict(img._getexif().items())
-
-                if exif[orientation] == 3:
-                        img = img.rotate(180, expand=True)
-                    elif exif[orientation] == 6:
-                        img = img.rotate(270, expand=True) 
-                    elif exif[orientation] == 8:
-                        img = img.rotate(90, expand=True) 
-
-                    
-                    
+                    exif = img._getexif()
+                    if exif:
+                        for tag, value in exif.items():
+                            if ExifTags.TAGS.get(tag) == 'Orientation':
+                                orientation = value
+                                if orientation == 3:
+                                    img = img.rotate(180, expand=True)
+                                elif orientation == 6:
+                                    img = img.rotate(270, expand=True)
+                                elif orientation == 8:
+                                    img = img.rotate(90, expand=True)
+                                break 
                 except (AttributeError, KeyError, IndexError):
                     pass
 
