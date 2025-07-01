@@ -1,6 +1,5 @@
 streamlit
 Pillow
-ultralytics
 fpdf
 gdown
 psycopg2-binary
@@ -10,4 +9,5 @@ av
 streamlit-webrtc
 opencv-python-headless
 onnxruntime
-torch
+ultralytics>=8.1.0
+torch>=2.1.0
