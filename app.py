@@ -3,6 +3,8 @@ from PIL import Image, UnidentifiedImageError, ExifTags
 from ultralytics import YOLO
 from fpdf import FPDF
 import tempfile, gdown, os, json, io, datetime, cv2
+from streamlit_webrtc import webrtc_streamer, VideoTransformerBase, RTCConfiguration
+
 
 st.markdown("""
 <style id="auto-theme">
@@ -139,31 +141,26 @@ def upload_image_detect_page():
 
 def webcam_detect_page():
     st.header("Deteksi Tomat via Webcam (Real-Time)")
-    st.write("Mengaktifkan webcam untuk mendeteksi tomat secara langsung.")
+    st.write("Aktifkan webcam untuk mendeteksi tomat secara langsung melalui browser.")
+
     model, NAMES = st.session_state.model, st.session_state.label_names
-    run = st.checkbox("Aktifkan Deteksi Real-Time")
-    frame_placeholder = st.empty()
-    if run:
-        cap = cv2.VideoCapture(0)
-        if not cap.isOpened():
-            st.error("Tidak dapat mengakses webcam.")
-            return
-        while run:
-            ret, frame = cap.read()
-            if not ret:
-                st.warning("Gagal membaca frame dari kamera.")
-                break
+
+    class YOLOVideoTransformer(VideoTransformerBase):
+        def transform(self, frame):
+            img = frame.to_ndarray(format="bgr24")
             with tempfile.NamedTemporaryFile(suffix=".jpg", delete=False) as tmp:
-                cv2.imwrite(tmp.name, frame)
+                cv2.imwrite(tmp.name, img)
                 results = model(tmp.name)[0]
                 os.remove(tmp.name)
                 annotated = results.plot()
-                rgb_annotated = cv2.cvtColor(annotated, cv2.COLOR_BGR2RGB)
-                frame_placeholder.image(rgb_annotated, channels="RGB", use_column_width=True)
-            run = st.checkbox("Aktifkan Deteksi Real-Time", value=True, key="webcam_loop")
-        cap.release()
-        cv2.destroyAllWindows()
-        st.success("Deteksi webcam dihentikan.")
+                return cv2.cvtColor(annotated, cv2.COLOR_BGR2RGB)
+
+    webrtc_streamer(
+        key="yolo-stream",
+        video_transformer_factory=YOLOVideoTransformer,
+        rtc_configuration=RTCConfiguration({"iceServers": [{"urls": ["stun:stun.l.google.com:19302"]}]}),
+        media_stream_constraints={"video": True, "audio": False}
+    )
 
 def detect_page():
     st.title("TomaTect: Deteksi Tingkat Kematangan Tomat")
