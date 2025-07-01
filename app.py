@@ -157,11 +157,11 @@ def webcam_detect_page():
             return av.VideoFrame.from_ndarray(annotated_rgb, format="rgb24")
 
     webrtc_streamer(
-        key="yolo-stream",
-        video_transformer_factory=YOLOVideoTransformer,
-        rtc_configuration=RTCConfiguration({"iceServers": [{"urls": ["stun:stun.l.google.com:19302"]}]}),
-        media_stream_constraints={"video": True, "audio": False}
-    )
+    key="yolo-stream",
+    video_transformer_factory=VideoProcessor,
+    rtc_configuration=RTCConfiguration({"iceServers": [{"urls": ["stun:stun.l.google.com:19302"]}]}),
+    media_stream_constraints={"video": True, "audio": False}
+)
 
 def detect_page():
     st.title("TomaTect: Deteksi Tingkat Kematangan Tomat")
