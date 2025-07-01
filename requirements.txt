@@ -8,3 +8,5 @@ bcrypt
 numpy
 av
 streamlit-webrtc
+opencv-python-headless
+onnxruntime
