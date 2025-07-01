@@ -3,7 +3,7 @@ from PIL import Image, UnidentifiedImageError, ExifTags
 from ultralytics import YOLO
 from fpdf import FPDF
 import tempfile, gdown, os, json, io, datetime, cv2
-from streamlit_webrtc import webrtc_streamer, VideoTransformerBase, RTCConfiguration
+from streamlit_webrtc import webrtc_streamer, VideoProcessorBase, RTCConfiguration
 import av
 
 st.markdown("""
@@ -157,11 +157,11 @@ def webcam_detect_page():
             return av.VideoFrame.from_ndarray(annotated_rgb, format="rgb24")
 
     webrtc_streamer(
-    key="yolo-stream",
-    video_transformer_factory=VideoProcessor,
-    rtc_configuration=RTCConfiguration({"iceServers": [{"urls": ["stun:stun.l.google.com:19302"]}]}),
-    media_stream_constraints={"video": True, "audio": False}
-)
+        key="yolo-stream",
+        video_processor_factory=VideoProcessor,
+        rtc_configuration=RTCConfiguration({"iceServers": [{"urls": ["stun:stun.l.google.com:19302"]}]}),
+        media_stream_constraints={"video": True, "audio": False}
+    )
 
 def detect_page():
     st.title("TomaTect: Deteksi Tingkat Kematangan Tomat")
