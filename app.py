@@ -4,7 +4,7 @@ from ultralytics import YOLO
 from fpdf import FPDF
 import tempfile, gdown, os, json, io, datetime, cv2
 from streamlit_webrtc import webrtc_streamer, VideoTransformerBase, RTCConfiguration
-
+import av
 
 st.markdown("""
 <style id="auto-theme">
@@ -145,15 +145,16 @@ def webcam_detect_page():
 
     model, NAMES = st.session_state.model, st.session_state.label_names
 
-    class YOLOVideoTransformer(VideoTransformerBase):
-        def transform(self, frame):
+    class VideoProcessor(VideoProcessorBase):
+        def recv(self, frame):
             img = frame.to_ndarray(format="bgr24")
             with tempfile.NamedTemporaryFile(suffix=".jpg", delete=False) as tmp:
                 cv2.imwrite(tmp.name, img)
                 results = model(tmp.name)[0]
                 os.remove(tmp.name)
-                annotated = results.plot()
-                return cv2.cvtColor(annotated, cv2.COLOR_BGR2RGB)
+            annotated = results.plot()
+            annotated_rgb = cv2.cvtColor(annotated, cv2.COLOR_BGR2RGB)
+            return av.VideoFrame.from_ndarray(annotated_rgb, format="rgb24")
 
     webrtc_streamer(
         key="yolo-stream",
