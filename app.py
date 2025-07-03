@@ -132,12 +132,12 @@ def upload_image_detect_page():
         for uploaded in uploaded_files:
             st.markdown(f"### {uploaded.name}")
             img = Image.open(uploaded).convert("RGB")
-            st.image(img, caption="Gambar Asli", use_column_width=True)
+            st.image(img, caption="Gambar Asli", use_container_width=True)
             with tempfile.NamedTemporaryFile(delete=False, suffix=".jpg") as tf:
                 img.save(tf.name)
                 result = model(tf.name)[0]
                 annotated = Image.fromarray(result.plot()[..., ::-1])
-                st.image(annotated, caption="Hasil Deteksi", use_column_width=True)
+                st.image(annotated, caption="Hasil Deteksi", use_container_width=True)
                 os.remove(tf.name)
     else:
         st.info("Upload gambar untuk melihat hasil deteksi dan membuat laporan.")
