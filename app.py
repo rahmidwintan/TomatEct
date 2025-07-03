@@ -120,6 +120,13 @@ def about_page():
     st.write("---")
     st.info("Klasifikasi ini digunakan sebagai dasar untuk deteksi otomatis kualitas tomat dalam aplikasi TomaTect.")
 
+def upload_image_detect_page():
+    uploaded_files = st.file_uploader("Upload Gambar Tomat", accept_multiple_files=True, type=["jpg", "jpeg", "png"])
+    if uploaded_files:
+        st.session_state.uploaded_files = uploaded_files
+    else:
+        st.session_state.uploaded_files = []
+
 def detect_page():
     st.title("TomaTect: Deteksi Tingkat Kematangan Tomat")
     MODEL_URL  = "https://drive.google.com/file/d/1ZE6fp6XCdQt1EHQLCfZkcVYKNr9-2RdD/view?usp=sharing"
@@ -161,12 +168,12 @@ def detect_page():
             img.save(tf.name)
             temp_path = tf.name
 
-        r = model(temp_path)[0]
+        r = st.session_state.model(temp_path)[0]
         annotated = Image.fromarray(r.plot()[..., ::-1])
         st.image(annotated, caption="Hasil Deteksi", use_container_width=True)
 
         # hitung grade
-        cls = [NAMES[int(i)] for i in (r.boxes.cls.tolist() if r.boxes else [])]
+        cls = [st.session_state.label_names[int(i)] for i in (r.boxes.cls.tolist() if r.boxes else [])]
         a, b, c = cls.count("A"), cls.count("B"), cls.count("C")
         col1, col2, col3 = st.columns(3)
         col1.metric("Grade A", a); col2.metric("Grade B", b); col3.metric("Grade C", c)
