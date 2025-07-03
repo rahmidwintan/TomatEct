@@ -127,7 +127,7 @@ def upload_image_detect_page():
     else:
         st.session_state.uploaded_files = []
 
-def detect_page():
+def detect_image_page():
     st.title("TomaTect: Deteksi Tingkat Kematangan Tomat")
     MODEL_URL  = "https://drive.google.com/file/d/1ZE6fp6XCdQt1EHQLCfZkcVYKNr9-2RdD/view?usp=sharing"
     MODEL_PATH = "best.pt"
