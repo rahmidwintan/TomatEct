@@ -138,6 +138,8 @@ def detect_page():
         st.session_state.model = YOLO(MODEL_PATH)
         st.session_state.label_names = st.session_state.model.names
         st.markdown("---")
+        st.session_state.sub_page = st.radio("Pilih Metode Deteksi", ["Upload Gambar", "Deteksi via Webcam"],
+        key="detection_method_radio")
         if st.session_state.detection_method == "Upload Gambar":
           upload_image_detect_page()
         else:
@@ -209,10 +211,7 @@ def detect_page():
     st.download_button("Download Laporan (PDF)",
                        pdf_bytes, "laporan_tomatect.pdf", "application/pdf")
 
-    st.markdown("---")
-    st.session_state.sub_page = st.radio("Pilih Metode Deteksi", ["Upload Gambar", "Deteksi via Webcam"],
-        key="detection_method_radio"
-    )
+    
     
 
 
