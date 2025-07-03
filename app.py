@@ -137,15 +137,15 @@ def detect_page():
                 gdown.download(MODEL_URL, MODEL_PATH, quiet=False, fuzzy=True)
         st.session_state.model = YOLO(MODEL_PATH)
         st.session_state.label_names = st.session_state.model.names
-        st.markdown("---")
-        st.session_state.sub_page = st.radio("Pilih Metode Deteksi", ["Upload Gambar", "Deteksi via Webcam"],
-            key="detection_method_radio"
-        )
-        st.markdown("---")
-        if st.session_state.detection_method == "Upload Gambar":
-            upload_image_detect_page()
-        else:
-            webcam_detect_page()
+      st.markdown("---")
+      st.session_state.sub_page = st.radio("Pilih Metode Deteksi", ["Upload Gambar", "Deteksi via Webcam"],
+          key="detection_method_radio"
+      )
+      st.markdown("---")
+      if st.session_state.detection_method == "Upload Gambar":
+          upload_image_detect_page()
+      else:
+          webcam_detect_page()
 
     
 
