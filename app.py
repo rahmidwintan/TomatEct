@@ -128,6 +128,7 @@ def upload_image_detect_page():
     pdf_has_content = False
     model, NAMES = st.session_state.model, st.session_state.label_names
     uploaded_files = st.file_uploader("Upload Gambar", type=["jpg", "jpeg", "png", "heic"], accept_multiple_files=True)
+    st.session_state.uploaded_files = uploaded_files
     if uploaded_files:
         for uploaded in uploaded_files:
             st.markdown(f"### {uploaded.name}")
@@ -192,6 +193,7 @@ def detect_page():
     pdf = FPDF()
     pdf.set_auto_page_break(auto=True, margin=15)
 
+    uploaded_files = st.session_state.get("uploaded_files", [])
     for idx, uploaded in enumerate(uploaded_files, 1):
         st.markdown(f"###  {uploaded.name}")
 
