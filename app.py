@@ -101,17 +101,20 @@ def about_page():
     col1, col2, col3 = st.columns(3)
     with col1:
         st.image("https://raw.githubusercontent.com/rahmidwintan/TomatEct/main/images/matang.png", caption="Matang", use_container_width=True)
-        st.markdown("""**Matang (Grade A)** - Warna merah merata  
+        st.markdown("""**Matang (Grade A)** 
+        - Warna merah merata  
         - Tekstur lembut  
         - Siap dikonsumsi langsung""")
     with col2:
         st.image("https://raw.githubusercontent.com/rahmidwintan/TomatEct/main/images/setengah_matang.png", caption="Setengah Matang", use_container_width=True)
-        st.markdown("""**Setengah Matang (Grade B)** - Warna merah-kuning  
+        st.markdown("""**Setengah Matang (Grade B)** 
+        - Warna merah-kuning  
         - Masih keras sebagian  
         - Cocok untuk penyimpanan atau distribusi""")
     with col3:
         st.image("https://raw.githubusercontent.com/rahmidwintan/TomatEct/main/images/mentah.png", caption="Mentah", use_container_width=True)
-        st.markdown("""**Mentah (Grade C)** - Warna hijau mendominasi  
+        st.markdown("""**Mentah (Grade C)** 
+        - Warna hijau mendominasi  
         - Tekstur keras  
         - Belum siap konsumsi, cocok untuk pematangan lanjutan""")
     st.write("---")
@@ -184,6 +187,70 @@ def detect_page():
         upload_image_detect_page()
     else:
         webcam_detect_page()
+
+    # PDF gabungan
+    pdf = FPDF()
+    pdf.set_auto_page_break(auto=True, margin=15)
+
+    for idx, uploaded in enumerate(uploaded_files, 1):
+        st.markdown(f"###  {uploaded.name}")
+
+        try:
+            img = Image.open(uploaded).convert("RGB")
+        except UnidentifiedImageError:
+            st.error("Format tidak didukung.");  continue
+        st.image(img, caption="Gambar Asli", width=800)
+
+        # simpan sementara > inferensi
+        with tempfile.NamedTemporaryFile(delete=False, suffix=".jpg") as tf:
+            img.save(tf.name)
+            temp_path = tf.name
+
+        r = model(temp_path)[0]
+        annotated = Image.fromarray(r.plot()[..., ::-1])
+        st.image(annotated, caption="Hasil Deteksi", use_container_width=True)
+
+        # hitung grade
+        cls = [NAMES[int(i)] for i in (r.boxes.cls.tolist() if r.boxes else [])]
+        a, b, c = cls.count("A"), cls.count("B"), cls.count("C")
+        col1, col2, col3 = st.columns(3)
+        col1.metric("Grade A", a); col2.metric("Grade B", b); col3.metric("Grade C", c)
+
+        # tombol download gambar individual
+        buf = io.BytesIO()
+        annotated.save(buf, format="JPEG")
+        st.download_button(f"Download Gambar – {uploaded.name}",
+                           buf.getvalue(), f"hasil_{uploaded.name}", "image/jpeg")
+
+               # ── tambahkan ke PDF (tulisan di atas gambar) ──
+        pdf.add_page()
+        pdf.set_font("Times", size=10)
+
+        # tulis info deteksi di bagian atas
+        pdf.set_xy(10, 10)
+        pdf.multi_cell(0, 8,
+            f"[{idx}] {uploaded.name}\n"
+            f"Grade A : {a}   Grade B : {b}   Grade C : {c}\n"
+            f"Tanggal  : {datetime.datetime.now():%d/%m/%Y %H:%M}\n"
+            f"Pengguna : {st.session_state.username}"
+        )
+
+        # kemudian simpan dan tampilkan gambar hasil anotasi
+        img_path = f"{temp_path}_annot.jpg"
+        annotated.save(img_path)
+
+        # posisi gambar dimulai setelah teks (misal mulai dari Y = 50)
+        pdf.image(img_path, x=20, y=55, w=170, h=140)
+
+        os.remove(img_path)
+        os.remove(temp_path)
+
+
+
+    # tombol download PDF gabungan
+    pdf_bytes = pdf.output(dest="S").encode("latin1")
+    st.download_button("Download Laporan (PDF)",
+                       pdf_bytes, "laporan_tomatect_semua.pdf", "application/pdf")
 
 def main_app():
     with st.sidebar:
