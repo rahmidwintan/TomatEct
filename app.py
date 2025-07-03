@@ -212,7 +212,7 @@ def detect_page():
     # tombol download PDF gabungan
     pdf_bytes = pdf.output(dest="S").encode("latin1")
     st.download_button("Download Laporan (PDF)",
-                       pdf_bytes, "laporan_tomatect_semua.pdf", "application/pdf")
+                       pdf_bytes, "laporan_tomatect.pdf", "application/pdf")
 
 
 def webcam_detect_page():
