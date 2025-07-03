@@ -102,19 +102,19 @@ def about_page():
     with col1:
         st.image("https://raw.githubusercontent.com/rahmidwintan/TomatEct/main/images/matang.png", caption="Matang", use_container_width=True)
         st.markdown("""**Matang (Grade A)**
-        - Warna merah merata  
+        \n- Warna merah merata  
         - Tekstur lembut  
         - Siap dikonsumsi langsung""")
     with col2:
         st.image("https://raw.githubusercontent.com/rahmidwintan/TomatEct/main/images/setengah_matang.png", caption="Setengah Matang", use_container_width=True)
         st.markdown("""**Setengah Matang (Grade B)** 
-        - Warna merah-kuning  
+        \n- Warna merah-kuning  
         - Masih keras sebagian  
         - Cocok untuk penyimpanan atau distribusi""")
     with col3:
         st.image("https://raw.githubusercontent.com/rahmidwintan/TomatEct/main/images/mentah.png", caption="Mentah", use_container_width=True)
         st.markdown("""**Mentah (Grade C)**
-        - Warna hijau mendominasi  
+        \n- Warna hijau mendominasi  
         - Tekstur keras  
         - Belum siap konsumsi, cocok untuk pematangan lanjutan""")
     st.write("---")
