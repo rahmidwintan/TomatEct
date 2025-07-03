@@ -120,53 +120,6 @@ def about_page():
     st.write("---")
     st.info("Klasifikasi ini digunakan sebagai dasar untuk deteksi otomatis kualitas tomat dalam aplikasi TomaTect.")
 
-def upload_image_detect_page():
-    st.header("Upload Gambar untuk Deteksi")
-    st.caption("Unggah satu atau beberapa gambar tomat untuk deteksi.")
-    pdf = FPDF()
-    pdf.set_auto_page_break(auto=True, margin=15)
-    pdf_has_content = False
-    model, NAMES = st.session_state.model, st.session_state.label_names
-    uploaded_files = st.file_uploader("Upload Gambar", type=["jpg", "jpeg", "png", "heic"], accept_multiple_files=True)
-    st.session_state.uploaded_files = uploaded_files
-    if uploaded_files:
-        for uploaded in uploaded_files:
-            st.markdown(f"### {uploaded.name}")
-            img = Image.open(uploaded).convert("RGB")
-            st.image(img, caption="Gambar Asli", use_container_width=True)
-            with tempfile.NamedTemporaryFile(delete=False, suffix=".jpg") as tf:
-                img.save(tf.name)
-                result = model(tf.name)[0]
-                annotated = Image.fromarray(result.plot()[..., ::-1])
-                st.image(annotated, caption="Hasil Deteksi", use_container_width=True)
-                os.remove(tf.name)
-    else:
-        st.info("Upload gambar untuk melihat hasil deteksi dan membuat laporan.")
-
-def webcam_detect_page():
-    st.header("Deteksi Tomat via Webcam (Real-Time)")
-    st.write("Aktifkan webcam untuk mendeteksi tomat secara langsung melalui browser.")
-
-    model, NAMES = st.session_state.model, st.session_state.label_names
-
-    class VideoProcessor(VideoProcessorBase):
-        def recv(self, frame):
-            img = frame.to_ndarray(format="bgr24")
-            with tempfile.NamedTemporaryFile(suffix=".jpg", delete=False) as tmp:
-                cv2.imwrite(tmp.name, img)
-                results = model(tmp.name)[0]
-                os.remove(tmp.name)
-            annotated = results.plot()
-            annotated_rgb = cv2.cvtColor(annotated, cv2.COLOR_BGR2RGB)
-            return av.VideoFrame.from_ndarray(annotated_rgb, format="rgb24")
-
-    webrtc_streamer(
-        key="yolo-stream",
-        video_processor_factory=VideoProcessor,
-        rtc_configuration=RTCConfiguration({"iceServers": [{"urls": ["stun:stun.l.google.com:19302"]}]}),
-        media_stream_constraints={"video": True, "audio": False}
-    )
-
 def detect_page():
     st.title("TomaTect: Deteksi Tingkat Kematangan Tomat")
     MODEL_URL  = "https://drive.google.com/file/d/1ZE6fp6XCdQt1EHQLCfZkcVYKNr9-2RdD/view?usp=sharing"
@@ -253,6 +206,32 @@ def detect_page():
     pdf_bytes = pdf.output(dest="S").encode("latin1")
     st.download_button("Download Laporan (PDF)",
                        pdf_bytes, "laporan_tomatect_semua.pdf", "application/pdf")
+
+
+def webcam_detect_page():
+    st.header("Deteksi Tomat via Webcam (Real-Time)")
+    st.write("Aktifkan webcam untuk mendeteksi tomat secara langsung melalui browser.")
+
+    model, NAMES = st.session_state.model, st.session_state.label_names
+
+    class VideoProcessor(VideoProcessorBase):
+        def recv(self, frame):
+            img = frame.to_ndarray(format="bgr24")
+            with tempfile.NamedTemporaryFile(suffix=".jpg", delete=False) as tmp:
+                cv2.imwrite(tmp.name, img)
+                results = model(tmp.name)[0]
+                os.remove(tmp.name)
+            annotated = results.plot()
+            annotated_rgb = cv2.cvtColor(annotated, cv2.COLOR_BGR2RGB)
+            return av.VideoFrame.from_ndarray(annotated_rgb, format="rgb24")
+
+    webrtc_streamer(
+        key="yolo-stream",
+        video_processor_factory=VideoProcessor,
+        rtc_configuration=RTCConfiguration({"iceServers": [{"urls": ["stun:stun.l.google.com:19302"]}]}),
+        media_stream_constraints={"video": True, "audio": False}
+    )
+
 
 def main_app():
     with st.sidebar:
