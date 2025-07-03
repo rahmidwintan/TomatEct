@@ -141,6 +141,9 @@ def detect_page():
     st.session_state.sub_page = st.radio("Pilih Metode Deteksi", ["Upload Gambar", "Deteksi via Webcam"],
         key="detection_method_radio"
     )
+    st.session_state.detection_method = st.radio("Pilih Metode Deteksi", ["Upload Gambar", "Deteksi via Webcam"],
+        key="detection_method_radio"
+    )
     st.markdown("---")
     if st.session_state.detection_method == "Upload Gambar":
         upload_image_detect_page()
