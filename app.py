@@ -164,7 +164,7 @@ def detect_page():
 
         r = st.session_state.model(temp_path)[0]
         annotated = Image.fromarray(r.plot()[..., ::-1])
-        st.image(annotated, caption="Hasil Deteksi", use_container_width=True)
+        st.image(annotated, caption="Hasil Deteksi", width=600)
 
         cls = [st.session_state.label_names[int(i)] for i in (r.boxes.cls.tolist() if r.boxes else [])]
         a, b, c = cls.count("A"), cls.count("B"), cls.count("C")
