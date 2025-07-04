@@ -156,7 +156,7 @@ def detect_page():
             img = ImageOps.exif_transpose(img)
         except UnidentifiedImageError:
             st.error("Format tidak didukung."); continue
-        st.image(img, caption="Gambar Asli", width=800)
+        st.image(img, caption="Gambar Asli", width=600)
 
         with tempfile.NamedTemporaryFile(delete=False, suffix=".jpg") as tf:
             img.save(tf.name)
