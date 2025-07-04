@@ -122,19 +122,16 @@ def about_page():
 
 def upload_image_detect_page():
     uploaded_files = st.file_uploader("Upload Gambar Tomat", accept_multiple_files=True, type=["jpg", "jpeg", "png"])
-    if uploaded_files:
-        st.session_state.uploaded_files = uploaded_files
-    else:
-        st.session_state.uploaded_files = []
+    st.session_state.uploaded_files = uploaded_files or []
 
 def detect_page():
     st.title("TomaTect: Deteksi Tingkat Kematangan Tomat")
-    MODEL_URL  = "https://drive.google.com/file/d/1ZE6fp6XCdQt1EHQLCfZkcVYKNr9-2RdD/view?usp=sharing"
+    MODEL_URL  = "https://drive.google.com/uc?id=1ZE6fp6XCdQt1EHQLCfZkcVYKNr9-2RdD"
     MODEL_PATH = "best.pt"
     if st.session_state.model is None:
         if not os.path.exists(MODEL_PATH):
             with st.spinner("Mengunduh model…"):
-                gdown.download(MODEL_URL, MODEL_PATH, quiet=False, fuzzy=True)
+                gdown.download(MODEL_URL, MODEL_PATH, quiet=False)
         st.session_state.model = YOLO(MODEL_PATH)
         st.session_state.label_names = st.session_state.model.names
     st.markdown("---")
@@ -147,9 +144,6 @@ def detect_page():
     else:
         webcam_detect_page()
 
-    
-
-    # PDF gabungan
     pdf = FPDF()
     pdf.set_auto_page_break(auto=True, margin=15)
 
@@ -160,10 +154,9 @@ def detect_page():
         try:
             img = Image.open(uploaded).convert("RGB")
         except UnidentifiedImageError:
-            st.error("Format tidak didukung.");  continue
+            st.error("Format tidak didukung."); continue
         st.image(img, caption="Gambar Asli", width=800)
 
-        # simpan sementara > inferensi
         with tempfile.NamedTemporaryFile(delete=False, suffix=".jpg") as tf:
             img.save(tf.name)
             temp_path = tf.name
@@ -172,65 +165,50 @@ def detect_page():
         annotated = Image.fromarray(r.plot()[..., ::-1])
         st.image(annotated, caption="Hasil Deteksi", use_container_width=True)
 
-        # hitung grade
         cls = [st.session_state.label_names[int(i)] for i in (r.boxes.cls.tolist() if r.boxes else [])]
         a, b, c = cls.count("A"), cls.count("B"), cls.count("C")
         col1, col2, col3 = st.columns(3)
         col1.metric("Grade A", a); col2.metric("Grade B", b); col3.metric("Grade C", c)
 
-        # tombol download gambar individual
         buf = io.BytesIO()
         annotated.save(buf, format="JPEG")
-        st.download_button(f"Download Gambar – {uploaded.name}",
+        st.download_button(f"Download Hasil – {uploaded.name}",
                            buf.getvalue(), f"hasil_{uploaded.name}", "image/jpeg")
 
-               # ── tambahkan ke PDF (tulisan di atas gambar) ──
         pdf.add_page()
         pdf.set_font("Times", size=10)
-
-        # tulis info deteksi di bagian atas
-        pdf.set_xy(10, 10)
         pdf.multi_cell(0, 8,
             f"[{idx}] {uploaded.name}\n"
             f"Grade A : {a}   Grade B : {b}   Grade C : {c}\n"
             f"Tanggal  : {datetime.datetime.now():%d/%m/%Y %H:%M}\n"
             f"Pengguna : {st.session_state.username}"
         )
-
-        # kemudian simpan dan tampilkan gambar hasil anotasi
         img_path = f"{temp_path}_annot.jpg"
         annotated.save(img_path)
-
-        # posisi gambar dimulai setelah teks (misal mulai dari Y = 50)
-        pdf.image(img_path, x=20, y=55, w=170, h=140)
-
+        y_position = pdf.get_y() + 10
+        pdf.image(img_path, x=20, y=y_position, w=170, h=140)
         os.remove(img_path)
         os.remove(temp_path)
 
-
-
-    # tombol download PDF gabungan
-    pdf_bytes = pdf.output(dest="S").encode("latin1")
-    st.download_button("Download Laporan (PDF)",
-                       pdf_bytes, "laporan_tomatect.pdf", "application/pdf")
-
-    
-    
-
+    if uploaded_files:
+        pdf_bytes = pdf.output(dest="S").encode("latin1")
+        st.download_button("Download Semua Laporan (PDF)",
+                           pdf_bytes, "laporan_tomatect.pdf", "application/pdf")
 
 def webcam_detect_page():
     st.header("Deteksi Tomat via Webcam (Real-Time)")
     st.write("Aktifkan webcam untuk mendeteksi tomat secara langsung melalui browser.")
-
-    model, NAMES = st.session_state.model, st.session_state.label_names
+    model = st.session_state.model
 
     class VideoProcessor(VideoProcessorBase):
         def recv(self, frame):
             img = frame.to_ndarray(format="bgr24")
             with tempfile.NamedTemporaryFile(suffix=".jpg", delete=False) as tmp:
                 cv2.imwrite(tmp.name, img)
-                results = model(tmp.name)[0]
-                os.remove(tmp.name)
+                try:
+                    results = model(tmp.name)[0]
+                finally:
+                    os.remove(tmp.name)
             annotated = results.plot()
             annotated_rgb = cv2.cvtColor(annotated, cv2.COLOR_BGR2RGB)
             return av.VideoFrame.from_ndarray(annotated_rgb, format="rgb24")
@@ -241,7 +219,6 @@ def webcam_detect_page():
         rtc_configuration=RTCConfiguration({"iceServers": [{"urls": ["stun:stun.l.google.com:19302"]}]}),
         media_stream_constraints={"video": True, "audio": False}
     )
-
 
 def main_app():
     with st.sidebar:
