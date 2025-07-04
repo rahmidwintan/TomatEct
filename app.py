@@ -1,5 +1,5 @@
 import streamlit as st
-from PIL import Image, UnidentifiedImageError, ExifTags
+from PIL import Image, UnidentifiedImageError, ExifTags, ImageOps
 from ultralytics import YOLO
 from fpdf import FPDF
 import tempfile, gdown, os, json, io, datetime, cv2
