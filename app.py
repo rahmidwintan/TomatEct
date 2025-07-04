@@ -153,6 +153,7 @@ def detect_page():
 
         try:
             img = Image.open(uploaded).convert("RGB")
+            img = ImageOps.exif_transpose(img)
         except UnidentifiedImageError:
             st.error("Format tidak didukung."); continue
         st.image(img, caption="Gambar Asli", width=800)
